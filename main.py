@@ -73,7 +73,7 @@ class Player(object):
     def updateLocal(self):
         if self.x > telaL + 50: # A nave passou 50px além da borda direita da tela.
             self.x = 0 # Move a nave para o início do eixo X
-        elif self.x < 0 - self.largura: # A nave passou além da borda esquerda.
+        elif self.x < 0: # A nave passou além da borda esquerda.
             self.x = telaL # Move a nave para o final da tela
         elif self.y < 0:
             self.y = telaA
@@ -127,7 +127,7 @@ class Projetil(object):
     def desenhar(self, janela):
         pygame.draw.rect(janela, (255, 255, 255), [self.x, self.y, self.largura, self.altura])
 
-    # excluir os projetil que saui da tela
+    # excluir os projeteis que sairam da tela
     def foraDaTela (self):
         if self.x < -50 or self.x > telaL or self.y < -50 or self.y > telaA:
             return True
@@ -176,8 +176,6 @@ class Asteroide(object):
         janela.blit(self.image, (self.x, self.y))
 
 
-
-
 # desenhando imagens na tela
 def desenhandoTelaFinal (): 
     janela.blit(fundoImg, (0,0)) # colocando imagem de fundo
@@ -190,6 +188,7 @@ def desenhandoTelaFinal ():
     textoPontos = fonte.render("PONTOS: " + str(pontos), 2, (255,255,255))
 
     player.desenhar(janela) # colocando imagem da nave do player em cima da imagem de fundo
+    
     for a in asteroides:
         a.desenhar(janela)
 
