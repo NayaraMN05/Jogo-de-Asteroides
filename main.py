@@ -1,22 +1,16 @@
 """
 Jogo: Asteroides
-<<<<<<< HEAD
-Tutorial base: Asteroids Python Tutorial - https://www.youtube.com/watch?v=XKMjMGbdrpY&t=1s
+Base: Asteroids Python Tutorial
 """
 
 # ============================================================
 # 1️⃣ IMPORTAÇÕES E CONFIGURAÇÕES INICIAIS
 # ============================================================
-=======
-Tutorial: Asteroids Python Tutorial - https://www.youtube.com/watch?v=XKMjMGbdrpY&t=1s
-"""
 
->>>>>>> master
 import pygame
 import math
 import random
 
-<<<<<<< HEAD
 pygame.init()
 
 # Tamanho da tela
@@ -25,10 +19,8 @@ telaA = 600
 janela = pygame.display.set_mode((telaL, telaA))
 pygame.display.set_caption("Asteroides")
 
-# Fonte padrão
+# Fonte e clock
 fonte = pygame.font.SysFont("Arial", 24, True)
-
-# Clock para controlar FPS
 clock = pygame.time.Clock()
 
 # Variáveis principais do jogo
@@ -37,49 +29,37 @@ vidas = 3
 pontos = 0
 tiroRapido = False
 tempoPowerup = 0
-duracaoPowerup = 5000  # tempo do power-up em ms (5s)
-
-# Controle da tela inicial
+duracaoPowerup = 5000  # 5 segundos
 mostra_tela_inicial = True
+isSoundOn = True
 
 # ============================================================
-# 2️⃣ CARREGAMENTO DE IMAGENS
+# 2️⃣ CARREGAMENTO DE IMAGENS E SONS
 # ============================================================
+
+# Imagens
 fundoImg = pygame.image.load("AsteroidsImages/starbg.png")
-
 naveImg = pygame.image.load("AsteroidsImages/spaceRocket.png")
 naveImg = pygame.transform.smoothscale(naveImg, (50, 50))
-=======
-
-# inicializando pygame
-pygame.init()
-
-# definindo tamanho e criando tela para o jogo
-telaL = 600
-telaA = 600
-janela = pygame.display.set_mode((telaL, telaA)) 
-
-# definindo nome da aba do jogo
-pygame.display.set_caption("Asteroides")
-
-# definindo imagens -> acessando pasta/pegando imagem
-fundoImg = pygame.image.load("AsteroidsImages/starbg.png") # de fundo de tela
-naveImg = pygame.image.load("AsteroidsImages/spaceRocket.png") # nossa nave
-naveImg = pygame.transform.smoothscale(naveImg, (50, 50)) # img original muito grande, diminuindo escala
->>>>>>> master
-
 asteroideG = pygame.image.load("AsteroidsImages/asteroid150.png")
 asteroideM = pygame.image.load("AsteroidsImages/asteroid100.png")
 asteroideP = pygame.image.load("AsteroidsImages/asteroid50.png")
-
-<<<<<<< HEAD
 estrelaImg = pygame.image.load("AsteroidsImages/cogumeloMario.png")
 estrelaImg = pygame.transform.scale(estrelaImg, (40, 40))
+
+# Sons
+tiro = pygame.mixer.Sound("AsteroidsSons/tiro.wav")
+somDeTiroGrande = pygame.mixer.Sound("AsteroidsSons/bangLarge.wav")
+somDeTiroPequeno = pygame.mixer.Sound("AsteroidsSons/bangSmall.wav")
+tiro.set_volume(0.25)
+somDeTiroGrande.set_volume(0.25)
+somDeTiroPequeno.set_volume(0.25)
 
 # ============================================================
 # 3️⃣ CLASSES DO JOGO
 # ============================================================
-class Player(object):
+
+class Player:
     def __init__(self):
         self.img = naveImg
         self.largura = self.img.get_width()
@@ -90,85 +70,22 @@ class Player(object):
         self.atualizar_rotacao()
 
     def atualizar_rotacao(self):
-=======
-# definindo os sons -> acessando pasta/pegando Sons
-tiro = pygame.mixer.Sound("AsteroidsSons/tiro.wav")
-somDeTiroGrande = pygame.mixer.Sound("AsteroidsSons/bangLarge.wav")
-somDeTiroPequeno = pygame.mixer.Sound("AsteroidsSons/bangSmall.wav")
-
-# definindo o volume dos efeitos sonoros em 0.25 para ter 1/4 do som original
-tiro.set_volume(0.25)
-somDeTiroGrande.set_volume(0.25)
-somDeTiroPequeno.set_volume(0.25)
-
-
-# fazer com o que o jogo rode seguindo a CPU
-clock = pygame.time.Clock()
-
-gameover = False
-vidas = 3
-pontos = 0
-somDoJogo = True # Aqui criamos uma variavel para o som do jogo ser opcioanal para o jogador
-
-# padrões para o jogador
-class Player(object):
-    
-    def __init__(self):
-        #definindo imagem e tamanho padrão para o player
-        self.img = naveImg
-        self.largura = self.img.get_width()
-        self.altura = self.img.get_height()
-
-        # definindo posição padrão na tela (posições x e y)
-        self.x = telaL//2
-        self.y = telaA//2
-
-        # angulos que a nave do player está voltada
-        self.angulo = 0
         self.rotacaoSuperf = pygame.transform.rotate(self.img, self.angulo)
-        self.rotacaoRetan = self.rotacaoSuperf.get_rect()
-        self.rotacaoRetan.center = (self.x, self.y) # quando rotacionar, rotação no eixo central da nave
-        self.cosseno = math.cos(math.radians(self.angulo + 90))
-        self.seno = math.sin(math.radians(self.angulo + 90)) 
-        self.ponta = (self.x + self.cosseno * self.largura//2, self.y - self.seno * self.altura//2) # qual é a frente da nave
-
-    # desenho padrão de posições na tela
-    def desenhar(self, janela):
-        janela.blit(self.rotacaoSuperf, self.rotacaoRetan)
-
-    def virando(self): 
->>>>>>> master
-        self.rotacaoSuperf = pygame.transform.rotate(self.img, self.angulo)
-        self.rotacaoRetan = self.rotacaoSuperf.get_rect()
-        self.rotacaoRetan.center = (self.x, self.y)
+        self.rotacaoRetan = self.rotacaoSuperf.get_rect(center=(self.x, self.y))
         self.cosseno = math.cos(math.radians(self.angulo + 90))
         self.seno = math.sin(math.radians(self.angulo + 90))
-<<<<<<< HEAD
         self.ponta = (self.x + self.cosseno * self.largura // 2, self.y - self.seno * self.altura // 2)
 
     def desenhar(self, janela):
         janela.blit(self.rotacaoSuperf, self.rotacaoRetan)
 
     def updateLocal(self):
-<<<<<<< HEAD
-        if self.x > telaL + 50: # A nave passou 50px além da borda direita da tela.
-            self.x = 0 # Move a nave para o início do eixo X
-        elif self.x < 0: # A nave passou além da borda esquerda.
-            self.x = telaL # Move a nave para o final da tela
-        elif self.y < 0:
-            self.y = telaA
-        elif self.y > telaA + 50:
-            self.y = 0
-    
-    def viraEsquerda (self):
-=======
         if self.x > telaL + 50: self.x = 0
         elif self.x < -self.largura: self.x = telaL
-        elif self.y < 0: self.y = telaA
-        elif self.y > telaA + 50: self.y = 0
+        if self.y > telaA + 50: self.y = 0
+        elif self.y < -self.altura: self.y = telaA
 
     def viraEsquerda(self):
->>>>>>> afa6e8142b4fa503cd0f1a13ceabfec0c99e40ba
         self.angulo += 5
         self.atualizar_rotacao()
 
@@ -189,112 +106,36 @@ class Player(object):
         self.atualizar_rotacao()
 
 
-class Projetil(object):
-    def __init__(self):
-=======
-        self.ponta = (self.x + self.cosseno * self.largura//2, self.y - self.seno * self.altura//2)
-
-    # criando uma barreira invisível nas bordas da tela
-    def updateLocal(self):
-        if self.x > telaL - self.largura//2:
-            self.x = telaL - self.largura//2
-        elif self.x < self.largura//2:
-            self.x = self.largura//2
-
-        if self.y > telaA - self.altura//2:
-            self.y = telaA - self.altura//2
-        elif self.y < self.altura//2:
-            self.y = self.altura//2
-        
-    def viraEsquerda (self):
-        self.angulo += 5
-        self.virando()
-        self.updateLocal()
-
-    def viraDireita (self):
-        self.angulo -= 5
-        self.virando()
-        self.updateLocal()
-
-    def paraFrente (self):
-        self.x += self.cosseno * 6
-        self.y -= self.seno * 6
-        self.virando()
-        self.updateLocal()
-    
-    def paraTraz(self):
-        self.x -= self.cosseno * 6
-        self.y += self.seno * 6
-        self.virando()
-        self.updateLocal()
-
-
-# padrões para o projétil
-class Projetil(object):
-    def __init__(self):
-        # da onde o tiro sai
->>>>>>> master
-        self.mira = player.ponta
-        self.x, self.y = self.mira
+class Projetil:
+    def __init__(self, player):
+        self.x, self.y = player.ponta
         self.largura = 4
         self.altura = 4
-<<<<<<< HEAD
         self.c = player.cosseno
         self.s = player.seno
         self.xveloc = self.c * 10
-=======
-
-        # qual o percurso do tiro
-        self.c = player.cosseno
-        self.s = player.seno
-
-        # velocidade de cada tiro
-        self.xveloc =  self.c * 10
->>>>>>> master
         self.yveloc = self.s * 10
 
     def movimento(self):
         self.x += self.xveloc
         self.y -= self.yveloc
-<<<<<<< HEAD
 
     def desenhar(self, janela):
         pygame.draw.rect(janela, (255, 255, 255), [self.x, self.y, self.largura, self.altura])
 
-<<<<<<< HEAD
-    # excluir os projeteis que sairam da tela
-    def foraDaTela (self):
-        if self.x < -50 or self.x > telaL or self.y < -50 or self.y > telaA:
-            return True
-=======
     def foraDaTela(self):
         return self.x < -50 or self.x > telaL or self.y < -50 or self.y > telaA
 
->>>>>>> afa6e8142b4fa503cd0f1a13ceabfec0c99e40ba
-=======
-    
-    def desenhar(self, janela):
-        pygame.draw.rect(janela, (255, 255, 255), [self.x, self.y, self.largura, self.altura])
 
-    # excluir os projetil que saui da tela
-    def foraDaTela (self):
-        if self.x < -50 or self.x > telaL or self.y < -50 or self.y > telaA:
-            return True
->>>>>>> master
-
-class Asteroide(object):
+class Asteroide:
     def __init__(self, categoria):
         self.categoria = categoria
-<<<<<<< HEAD
         self.image = [asteroideP, asteroideM, asteroideG][categoria - 1]
         self.largura = 50 * categoria
         self.altura = 50 * categoria
-        # protege randrange caso imagem maior
-        max_x = max(1, telaL - self.largura)
-        max_y = max(1, telaA - self.altura)
         self.x, self.y = random.choice([
-            (random.randrange(0, max_x), random.choice([-self.altura - 5, telaA + 5])),
-            (random.choice([-self.largura - 5, telaL + 5]), random.randrange(0, max_y))
+            (random.randrange(0, telaL - self.largura), random.choice([-self.altura - 5, telaA + 5])),
+            (random.choice([-self.largura - 5, telaL + 5]), random.randrange(0, telaA - self.altura))
         ])
         self.xdirec = 1 if self.x < telaL // 2 else -1
         self.ydirec = 1 if self.y < telaA // 2 else -1
@@ -305,86 +146,14 @@ class Asteroide(object):
         janela.blit(self.image, (self.x, self.y))
 
 
-<<<<<<< HEAD
-# desenhando imagens na tela
-=======
-        if self.categoria == 1:
-            self.image = asteroideP
-        elif self.categoria == 2:
-            self.image = asteroideM
-        else:
-            self.image = asteroideG
-
-        # definindo tamanho do asteroide
-        self.largura = 50 * categoria
-        self.altura = 50 * categoria
-
-        # local aleatório pelo qual o asteroid vai surgir
-        self.localAst = random.choice([
-            # Aparece acima ou abaixo da tela
-            (random.randrange(0, telaL - self.largura), random.choice([-1 * self.altura - 5, telaA + 5])),
-            # Aparece à esquerda ou à direita da tela
-            (random.choice([-1 * self.largura - 5, telaL + 5]), random.randrange(0, telaA - self.altura))
-            ])
-        self.x, self.y = self.localAst
-
-        # que direção vai seguir
-        if self.x < telaL//2:
-            self.xdirec = 1
-        else:
-            self.xdirec = -1
-        
-        if self.y < telaA//2:
-            self.ydirec = 1
-        else:
-            self.ydirec = -1
-        
-        # velocidade do asteroide
-        self.xv = self.xdirec * random.randrange(1,3)
-        self.yv = self.ydirec * random.randrange(1,3)
-
-    
-    def desenhar(self, janela):
-        # asteroide do tamanho da tela
-        janela.blit(self.image, (self.x, self.y))
-
-
-
-
-# desenhando images na tela
->>>>>>> master
-def desenhandoTelaFinal (): 
-    janela.blit(fundoImg, (0,0)) # colocando imagem de fundo
-
-    # criando texto
-    fonte = pygame.font.SysFont("comicsansms", 15) 
-    textoVidas = fonte.render("VIDAS: " + str(vidas), 1, (255,255,255))
-    textoJogarDeNovo = fonte.render("Pressione ESPAÇO para jogar novamente", 1, (255,255,255))
-
-    textoPontos = fonte.render("PONTOS: " + str(pontos), 2, (255,255,255))
-
-    player.desenhar(janela) # colocando imagem da nave do player em cima da imagem de fundo
-<<<<<<< HEAD
-    
-=======
->>>>>>> master
-    for a in asteroides:
-        a.desenhar(janela)
-
-    for b in playerBullets:
-        b.desenhar(janela)
-<<<<<<< HEAD
-=======
-class Estrela(object):
+class Estrela:
     def __init__(self):
         self.img = estrelaImg
         self.largura = self.img.get_width()
         self.altura = self.img.get_height()
-        max_x = max(1, telaL - self.largura)
-        max_y = max(1, telaA - self.altura)
         self.x, self.y = random.choice([
-            (random.randrange(0, max_x), random.choice([-self.altura - 5, telaA + 5])),
-            (random.choice([-self.largura - 5, telaL + 5]), random.randrange(0, max_y))
+            (random.randrange(0, telaL - self.largura), random.choice([-self.altura - 5, telaA + 5])),
+            (random.choice([-self.largura - 5, telaL + 5]), random.randrange(0, telaA - self.altura))
         ])
         self.xdirec = 1 if self.x < telaL // 2 else -1
         self.ydirec = 1 if self.y < telaA // 2 else -1
@@ -398,78 +167,58 @@ class Estrela(object):
     def draw(self, janela):
         janela.blit(self.img, (self.x, self.y))
 
-
 # ============================================================
 # 4️⃣ FUNÇÃO DE DESENHO
 # ============================================================
+
 def desenhandoTelaFinal():
     janela.blit(fundoImg, (0, 0))
     fonte_local = pygame.font.SysFont("comicsansms", 15)
     textoVidas = fonte_local.render("VIDAS: " + str(vidas), True, (255, 255, 255))
     textoPontos = fonte_local.render("PONTOS: " + str(pontos), True, (255, 255, 255))
-    textoJogarDeNovo = fonte_local.render("Pressione ESPAÇO para jogar novamente", True, (255, 255, 255))
-
+    janela.blit(textoVidas, (25, 25))
+    janela.blit(textoPontos, (475, 25))
     player.desenhar(janela)
     for a in asteroides: a.desenhar(janela)
     for b in playerBullets: b.desenhar(janela)
     for s in estrelas: s.draw(janela)
->>>>>>> afa6e8142b4fa503cd0f1a13ceabfec0c99e40ba
-
-    if gameover:
-        janela.blit(textoJogarDeNovo, (telaL // 2 - textoJogarDeNovo.get_width() // 2, telaA // 2 - textoJogarDeNovo.get_height() // 2))
-
-    janela.blit(textoVidas, (25, 25))
-    janela.blit(textoPontos, (475, 25))
-
 
 # ============================================================
-# 5️⃣ LOOP PRINCIPAL (corrigido: usa events = pygame.event.get() UMA vez)
+# 5️⃣ LOOP PRINCIPAL
 # ============================================================
+
 player = Player()
 playerBullets = []
 asteroides = []
-estrelas = [Estrela()]
+estrelas = []
 conteAsteroides = 0
-
-# precompute fonts/visuals da tela inicial
 titulo_font = pygame.font.SysFont("comicsansms", 72, True)
 botao_font = pygame.font.SysFont("Arial", 36, True)
-botao_cor = (255, 255, 255)
-botao_text_cor = (0, 0, 0)
 botao_rect = pygame.Rect(telaL // 2 - 100, telaA // 2 + 80, 200, 60)
 
 running = True
 while running:
     clock.tick(60)
-    events = pygame.event.get()  # pega todos os eventos UMA vez por frame
+    events = pygame.event.get()
 
-    # processa eventos globais (fechar janela)
     for event in events:
         if event.type == pygame.QUIT:
             running = False
 
-    # ------------------------------------------------------------
-    # 🎬 TELA INICIAL
-    # ------------------------------------------------------------
+    # Tela inicial
     if mostra_tela_inicial:
         janela.blit(fundoImg, (0, 0))
         titulo_surf = titulo_font.render("ASTEROIDS", True, (255, 255, 255))
         titulo_rect = titulo_surf.get_rect(center=(telaL // 2, 160))
-        pygame.draw.rect(janela, (0, 0, 0, 120), (0, 0, telaL, telaA))  # leve overlay (opcional)
         janela.blit(titulo_surf, titulo_rect)
-
-        # desenha botão
-        pygame.draw.rect(janela, botao_cor, botao_rect, border_radius=12)
-        jogar_surf = botao_font.render("JOGAR", True, botao_text_cor)
+        pygame.draw.rect(janela, (255, 255, 255), botao_rect, border_radius=12)
+        jogar_surf = botao_font.render("JOGAR", True, (0, 0, 0))
         jogar_rect = jogar_surf.get_rect(center=botao_rect.center)
         janela.blit(jogar_surf, jogar_rect)
 
-        # checa clique no botão (usa a mesma lista events)
         for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN and botao_rect.collidepoint(event.pos):
                 mostra_tela_inicial = False
-                # resetar contadores/estado do jogo ao iniciar (opcional)
-                gameover = False
                 vidas = 3
                 pontos = 0
                 tiroRapido = False
@@ -477,26 +226,21 @@ while running:
                 player = Player()
                 playerBullets = []
                 asteroides = []
-                estrelas = [Estrela()]
+                estrelas = []
                 conteAsteroides = 0
         pygame.display.update()
-        continue  # volta ao while; não executa a lógica do jogo enquanto estiver na tela inicial
+        continue
 
-    # ------------------------------------------------------------
-    # 🎮 LÓGICA DO JOGO (após tela inicial)
-    # ------------------------------------------------------------
+    # ===================== LÓGICA DO JOGO =====================
     conteAsteroides += 1
 
     if not gameover:
-        # Spawn de asteroides e power-ups
         if conteAsteroides % 50 == 0:
-            asteroides.append(Asteroide(random.choice([1, 1, 1, 2, 2, 3])))
+            asteroides.append(Asteroide(random.choice([1, 1, 2, 3])))
         if conteAsteroides % 1000 == 0:
             estrelas.append(Estrela())
 
-        # Movimentos e colisões
         player.updateLocal()
-
         for b in playerBullets[:]:
             b.movimento()
             if b.foraDaTela():
@@ -505,16 +249,19 @@ while running:
         for a in asteroides[:]:
             a.x += a.xv
             a.y += a.yv
-
-            # colisões player x asteroide (AABB)
-            if a.x < player.x + player.largura and a.x + a.largura > player.x and a.y < player.y + player.altura and a.y + a.altura > player.y:
+            # colisão com player
+            if (a.x < player.x + player.largura and a.x + a.largura > player.x and
+                a.y < player.y + player.altura and a.y + a.altura > player.y):
                 vidas -= 1
-                if a in asteroides: asteroides.remove(a)
+                asteroides.remove(a)
+                if vidas <= 0:
+                    gameover = True
                 break
 
-            # colisão projétil x asteroide
+            # colisão com tiro
             for b in playerBullets[:]:
-                if b.x < a.x + a.largura and b.x + b.largura > a.x and b.y < a.y + a.altura and b.y + b.altura > a.y:
+                if (b.x < a.x + a.largura and b.x + b.largura > a.x and
+                    b.y < a.y + a.altura and b.y + b.altura > a.y):
                     if a.categoria > 1:
                         pontos += 10 * a.categoria
                         novo = Asteroide(a.categoria - 1)
@@ -522,170 +269,55 @@ while running:
                         asteroides.append(novo)
                     else:
                         pontos += 30
-                    if a in asteroides: asteroides.remove(a)
-                    if b in playerBullets: playerBullets.remove(b)
+                    if isSoundOn:
+                        (somDeTiroGrande if a.categoria > 2 else somDeTiroPequeno).play()
+                    asteroides.remove(a)
+                    playerBullets.remove(b)
                     break
 
-        # power-up
+        # Power-up
         for s in estrelas[:]:
             s.mover()
             if s.x < -100 or s.x > telaL or s.y < -100 or s.y > telaA:
-                if s in estrelas: estrelas.remove(s)
+                estrelas.remove(s)
                 continue
-            for b in playerBullets[:]:
-                if b.x < s.x + s.largura and b.x + b.largura > s.x and b.y < s.y + s.altura and b.y + b.altura > s.y:
-                    tiroRapido = True
-                    tempoPowerup = pygame.time.get_ticks()
-                    if s in estrelas: estrelas.remove(s)
-                    if b in playerBullets: playerBullets.remove(b)
-                    break
+            if (player.x < s.x + s.largura and player.x + player.largura > s.x and
+                player.y < s.y + s.altura and player.y + player.altura > s.y):
+                tiroRapido = True
+                tempoPowerup = pygame.time.get_ticks()
+                estrelas.remove(s)
 
-        if vidas <= 0:
-            gameover = True
-
-        # Movimentação com teclas
+        # Controle de teclas
         teclas = pygame.key.get_pressed()
         if teclas[pygame.K_LEFT]: player.viraEsquerda()
         if teclas[pygame.K_RIGHT]: player.viraDireita()
         if teclas[pygame.K_UP]: player.paraFrente()
         if teclas[pygame.K_DOWN]: player.paraTraz()
-        if teclas[pygame.K_SPACE] and tiroRapido:
-            playerBullets.append(Projetil())
+        if teclas[pygame.K_SPACE]:
+            if tiroRapido or conteAsteroides % 10 == 0:
+                playerBullets.append(Projetil(player))
+                if isSoundOn: tiro.play()
 
-    # eventos (usando a lista events)
+    # eventos extras
     for event in events:
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-            if not gameover:
-                if not tiroRapido:
-                    playerBullets.append(Projetil())
-            else:
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_m:
+                isSoundOn = not isSoundOn
+            if event.key == pygame.K_SPACE and gameover:
                 gameover = False
-                vidas, pontos = 3, 0
+                vidas = 3
+                pontos = 0
                 asteroides.clear()
 
-    # duração do power-up
     if tiroRapido and pygame.time.get_ticks() - tempoPowerup >= duracaoPowerup:
         tiroRapido = False
 
-    # desenho
+    # Desenho
     desenhandoTelaFinal()
     if tiroRapido:
         tempo_restante = max(0, (duracaoPowerup - (pygame.time.get_ticks() - tempoPowerup)) // 1000)
         texto_powerup = fonte.render(f"Tiro rápido: {tempo_restante}s", True, (255, 255, 0))
         janela.blit(texto_powerup, (20, 60))
-
     pygame.display.update()
 
 pygame.quit()
-=======
-
-    if gameover:
-        janela.blit(textoJogarDeNovo, (telaL//2 - textoJogarDeNovo.get_width()//2, telaA//2 - textoJogarDeNovo.get_height()//2))
-
-    janela.blit(textoVidas, (25,25)) # colocando texto de vidas na tela
-    janela.blit(textoPontos, (475,25)) # colocando texto de pontos na tela
-    pygame.display.update() # a ordem dos fatores altera o resultado! Tem que deixar esse no final!
-
-
-player = Player()
-playerBullets = []
-asteroides = []
-conteAsteroides = 0
-
-running = True
-while running:
-    clock.tick(60) # padrão para não sobrecarregar CPU
-    conteAsteroides += 1
-
-    if not gameover:
-
-        if conteAsteroides % 50 == 0:
-            ran = random.choice([1,1,1,2,2,3])
-            asteroides.append(Asteroide(ran))
-
-        player.updateLocal()
-
-        for b in playerBullets:
-            b.movimento()
-            # se as balas forem alem da tela, excluir elas:
-            if b.foraDaTela():
-                playerBullets.pop(playerBullets.index(b))
-
-        for a in asteroides:
-            a.x += a.xv
-            a.y += a.yv
-            
-
-            # COLISÃO entre PLAYER e ASTEROIDE
-            if (player.x >= a.x and player.x <= a.x + a.largura) or (player.x + player.largura >= a.x and player.x + player.largura <= a.x + a.largura):
-                if (player.y >= a.y and player.y <= a.y + a.altura) or (player.y + player.altura >= a.y and player.y + player.altura <= a.y + a.altura):
-                    vidas -= 1
-                    asteroides.pop(asteroides.index(a))
-                    break
-
-
-            # COLISÃO entre PROJETIL e ASTEROIDE
-            for b in playerBullets:
-                if (b.x >= a.x and b.x <= a.x + a.largura) or b.x + b.largura >= a.x and b.x + b.largura <= a.x + a.largura:
-                    if (b.y >= a.y and b.y <= a.y + a.altura) or b.y + b.largura >= a.y and b.y + b.altura <= a.y + a.altura:
-                        
-                        # Quebrando os asteroides
-                        if a.categoria == 3:
-                            somDeTiroGrande.play()
-                            pontos += 10
-                            novoAste = Asteroide(2)
-                            novoAste.x = a.x
-                            novoAste.y = a.y
-                            asteroides.append(novoAste)
-                        elif a.categoria == 2:
-                            somDeTiroPequeno.play()
-                            pontos += 20
-                            novoAste = Asteroide(1)
-                            novoAste.x = a.x
-                            novoAste.y = a.y
-                            asteroides.append(novoAste)
-                        else:
-                            pontos += 30
-                            somDeTiroPequeno.play()
-
-                        # excluíndo projétil e asteroide para economizar memória                      
-                        asteroides.pop(asteroides.index(a))
-                        playerBullets.pop(playerBullets.index(b))
-        if vidas  <= 0:
-            gameover = True
-
-        teclas = pygame.key.get_pressed()
-        if teclas[pygame.K_LEFT]:
-            player.viraEsquerda()
-        if teclas[pygame.K_RIGHT]:
-            player.viraDireita()
-        if teclas[pygame.K_UP]:
-            player.paraFrente()
-        if teclas[pygame.K_DOWN]:
-            player.paraTraz()
-    
-    for event in pygame.event.get(): # caso o jogador tenha saído, terminar jogo
-        if event.type == pygame.QUIT:
-            running = False
-
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE:
-                if not gameover:
-                    playerBullets.append(Projetil())
-                    tiro.play() #Aqui fica o som dos disparos
-                
-                # apertar espaço para jogar de novo
-                else:
-                    gameover = False
-                    vidas = 3
-                    pontos = 0 
-                    asteroides.clear()
-
-            #Caso o jogador queira ele aperta a letra M para desligar o som         
-            if event.key == pygame.K_m:
-                isSoundOn = not isSoundOn
-                    
-    desenhandoTelaFinal()
-
-pygame.quit()
->>>>>>> master
