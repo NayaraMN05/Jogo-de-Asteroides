@@ -1,4 +1,5 @@
 """
+Alunos: Nayara Nobre, Renato Conceição, Raphael Gomes
 Jogo: Asteroides
 Base: Asteroids Python Tutorial
 """
